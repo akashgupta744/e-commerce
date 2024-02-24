@@ -1,7 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render 
+from products.models import *
+
 
 # Create your views here.
 
 
 def index(request):
-    return render(request, 'home/index.html')
+    context = {'products' : Category.objects.all() , 'banners': BannerImage.objects.all()}
+    
+    return render(request , 'home/index.html' , context)
