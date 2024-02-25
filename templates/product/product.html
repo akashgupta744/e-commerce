@@ -11,13 +11,16 @@
             <aside class="col-md-6">
     <article class="gallery-wrap"> 
     <div class="img-big-wrap">
-      {% for image in product.product_image.all %}
-          <div class="img-wrap"> <img src="{{ image.image.url }}" alt="no image"> </div>
-      {% endfor %}
-    </div> <!-- slider-product.// -->
+      
+          <div class="img-wrap"> 
+            <img src="{{ single_img.image.url }}" alt="no image"> 
+          </div>
+        
+    </div>
+     <!-- slider-product.// -->
     <div class="thumbs-wrap">
-      {% for image in product.product_images.all %}
-      <a href="#" class="item-thumb"> <img src="{{ image.image.url }}"></a>
+      {% for image in product.product_image.all %}
+      <a href="{{ image.image.url }}" class="item-thumb"> <img src="{{ image.image.url }}"></a>
       
       {% endfor %}
 
@@ -47,7 +50,13 @@
     </div> <!-- rating-wrap.// -->
     
     <div class="mb-3"> 
-        <var class="price h4">₹{{product.price}}.00</var> 
+        <var class="price h4">₹
+          {% if updated_price %}
+          {{ updated_price }}
+          {% else %}
+          {{product.price}}
+          {% endif %}
+          .00</var> 
         <span class="text-muted">/per pc</span> 
     </div> <!-- price-detail-wrap .// -->
     
@@ -57,12 +66,20 @@
     <dl class="row">
       <dt class="col-sm-3">Model#</dt>
       <dd class="col-sm-9">Odsy-1000</dd>
-    
+     
       <dt class="col-sm-3">Color</dt>
-      <dd class="col-sm-9">Brown</dd>
+      {% for color in product.color_variant.all %}
+  
+        <label class="col-sm-3 custom-control custom-radio custom-control-inline">
+          <input type="radio" name="select_color" checked="" class="custom-control-input">
+          <span class="custom-control-label">{{color.color_name}}</span>
+        </label>
     
+      {% endfor %}
+     
       <dt class="col-sm-3">Delivery</dt>
       <dd class="col-sm-9">Russia, USA, and Europe </dd>
+    
     </dl>
     
     <hr>
@@ -75,7 +92,7 @@
                   </div>
                   <input type="text" class="form-control" value="1">
                   <div class="input-group-append">
-                    <button class="btn btn-light" type="button" id="button-minus"> − </button>
+                    <button class="btn btn-light" type="button" id="button-minus"> - </button>
                   </div>
                 </div>
             </div> <!-- col.// -->
@@ -86,7 +103,7 @@
                       {% for size in product.size_variant.all %}
                       
                         <label class="custom-control custom-radio custom-control-inline">
-                          <input type="radio" name="select_size" checked="" class="custom-control-input">
+                          <input type="radio" onchange = "get_correct_price('{{size.size_name}}')" name="select_size" {% if selected_size == size.size_name %} checked {% endif %} class="custom-control-input">
                           <div class="custom-control-label">{{size.size_name}}</div>
                         </label>
     
@@ -99,7 +116,8 @@
         </div> <!-- row.// -->
     
         <a href="#" class="btn  btn-primary"> Buy now </a>
-        <a href="#" class="btn  btn-outline-primary"> <span class="text">Add to cart</span> <i class="fas fa-shopping-cart"></i>  </a>
+        <a href="{% url 'add_to_cart' product.uid %}?variant={{selected_size}}" class="btn  btn-outline-primary"> 
+          <span class="text">Add to cart</span> <i class="fas fa-shopping-cart"></i>  </a>
     </article> <!-- product-info-aside .// -->
             </main> <!-- col.// -->
         </div> <!-- row.// -->
@@ -109,5 +127,11 @@
 
     </div>
     </section>
+
+    <script>
+      function get_correct_price(size){
+        window.location.href = window.location.pathname + `?size=${size}`
+      }
+    </script>
 
 {% endblock %}

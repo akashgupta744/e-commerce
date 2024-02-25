@@ -1,11 +1,14 @@
 from django.shortcuts import render 
 from products.models import *
+from accounts.models import CartItems
 
 
 # Create your views here.
 
 
 def index(request):
-    context = {'products' : Category.objects.all() , 'banners': BannerImage.objects.all()}
+    c = CartItems.objects.all().count()
+    
+    context = {'products' : Category.objects.all(),'count':c , 'banners': BannerImage.objects.all()}
     
     return render(request , 'home/index.html' , context)
