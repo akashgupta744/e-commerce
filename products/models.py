@@ -19,14 +19,14 @@ class Category(BaseModel):
     
 
 class ColorVariant(BaseModel):
-    color_name = models.CharField(max_length=100)
+    color_name = models.CharField(max_length=100, default='black')
     price = models.IntegerField(default = 0)
 
     def __str__(self):
         return self.color_name
 
 class SizeVariant(BaseModel):
-    size_name = models.CharField(max_length=100)
+    size_name = models.CharField(max_length=100, default='S')
     price = models.IntegerField(default = 0)
 
     def __str__(self):
@@ -48,7 +48,7 @@ class Product(BaseModel):
         self.slug = slugify(self.product_name)
         super(Product, self).save(*args, **kwargs)
 
-    def __str__(self):
+    def __str__(self): 
         return self.product_name
     
     def get_product_price_by_size(self, size):

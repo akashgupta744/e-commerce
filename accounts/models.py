@@ -22,12 +22,40 @@ class Cart(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = 'carts')
     is_paid = models.BooleanField(default = False)
 
+    def get_cart_total(self):
+        cart_items = self.Cart.all()
+        print(cart_items,'hi')
+        price =  []
+        for cart_item in cart_items:
+            price.append(cart_item.product.price)
+            if cart_item.color_variant:
+                color_variant_price = cart_item.color_variant_price
+                price.append(color_variant_price)
+            if cart_item.size_variant:
+                size_variant_price = cart_item.size_variant_price
+                price.append(size_variant_price)
+        
+        return sum(price)
+
+
 class CartItems(BaseModel):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name = 'cart_items')
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null = True, blank = True, related_name='product_cart')
     color_variant = models.ForeignKey(ColorVariant, on_delete=models.SET_NULL, null = True, blank = True)
     size_variant = models.ForeignKey(SizeVariant, on_delete=models.SET_NULL, null = True, blank = True)
     
+
+    def get_product_price(self):
+        price = [self.product.price]
+
+        if self.color_variant:
+            color_variant_price = self.color_variant.price
+            price.append(color_variant_price)
+        if self.size_variant:
+            size_variant_price = self.size_variant.price
+            price.append(size_variant_price)
+        return sum(price)
+
 
 
 @receiver(post_save, sender = User)

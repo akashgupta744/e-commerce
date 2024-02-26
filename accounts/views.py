@@ -96,5 +96,6 @@ def add_to_cart(request, uid):
 
 
 def cart(request):
-    context = {'cart': Cart.objects.filter(is_paid = False, user = request.user)}
+    context = {'carts': CartItems.objects.all(),'total_cart_sum':Cart.objects.all()}
+    print(Cart.get_cart_total)
     return render(request, 'accounts/cart.html', context)
