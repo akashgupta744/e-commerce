@@ -1,4 +1,7 @@
 {% extends "base/base.html"%}
+{% block content %}
+    <span class="badge badge-pill badge-danger notify">{{product.product_cart.count}}</span>
+{% endblock content %}
 
 {%  block start %}
 
@@ -24,7 +27,10 @@
       
       {% endfor %}
 
-    </div> <!-- slider-nav.// -->
+      
+
+    </div>
+     <!-- slider-nav.// -->
     </article> <!-- gallery-wrap .end// -->
             </aside>
             <main class="col-md-6 border-left">
@@ -78,24 +84,12 @@
       {% endfor %}
      
       <dt class="col-sm-3">Delivery</dt>
-      <dd class="col-sm-9">Russia, USA, and Europe </dd>
+      <dd class="col-sm-9">Bangalore </dd>
     
     </dl>
     
     <hr>
         <div class="form-row">
-            <div class="form-group col-md flex-grow-0">
-                <label>Quantity</label>
-                <div class="input-group mb-3 input-spinner">
-                  <div class="input-group-prepend">
-                    <button class="btn btn-light" type="button" id="button-plus"> + </button>
-                  </div>
-                  <input type="text" class="form-control" value="1">
-                  <div class="input-group-append">
-                    <button class="btn btn-light" type="button" id="button-minus"> - </button>
-                  </div>
-                </div>
-            </div> <!-- col.// -->
             {% if product.size_variant.count %}
             <div class="form-group col-md">
                     <label>Select size</label>

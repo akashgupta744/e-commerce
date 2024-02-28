@@ -5,6 +5,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate , login , logout
 from django.http import HttpResponseRedirect,HttpResponse
+from django.contrib.auth.decorators import login_required 
+from django.urls import reverse
 # Create your views here.
 from accounts.models import *
 from products.models import *
@@ -58,13 +60,16 @@ def register_page(request):
         user_obj.save()
 
         messages.success(request, 'An email has been sent on your mail.')
-        return HttpResponseRedirect(request.path_info)
+        return redirect('login')
 
 
     return render(request ,'accounts/register.html')
 
-
-
+@login_required(login_url='login') 
+def logout_page(request):
+    logout(request)
+    return redirect('index')
+    
 
 def activate_email(request, email_token):
     try:
@@ -77,25 +82,66 @@ def activate_email(request, email_token):
     
 
 def add_to_cart(request, uid):
+    
     variant = request.GET.get('variant')
-    print(variant,'po')
+    
     product = Product.objects.get(uid = uid)
     user = request.user
     cart, _ = Cart.objects.get_or_create(user = user, is_paid = False)
-    cart_item = CartItems.objects.create(cart = cart, product = product,  )
+    cart_item= CartItems.objects.create(cart = cart,user = user, product = product)
+    
     if variant:
         variant = request.GET.get('variant')
         size_variant = SizeVariant.objects.get(size_name = variant)
-        print(size_variant)
+       
         cart_item.size_variant =  size_variant
-        print(cart_item.size_variant)
+        
         cart_item.save()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
 
-
+@login_required(login_url='login') 
 def cart(request):
-    context = {'carts': CartItems.objects.all(),'total_cart_sum':Cart.objects.all()}
-    print(Cart.get_cart_total)
+    c = CartItems.objects.filter(user=request.user)
+    print(c)
+    img_list=[]
+    for cart in c:
+        f = True 
+        for im in cart.product.product_image.all():
+            if f:
+                img_list.append(im)
+                f=False
+    print(img_list)
+    total=0
+    i=0
+    for p in c :
+        total += p.product.price*p.cart_quantity
+        p.image=img_list[i].image
+        p.save
+        i +=1
+    
+    context = {'carts': c,'total_cart_sum':total,'count':c.count()}
+    
     return render(request, 'accounts/cart.html', context)
+
+
+def cart_add(request,pk):
+    obj = CartItems.objects.get(pk=pk)
+    obj.cart_quantity += 1
+    obj.save()
+    return HttpResponseRedirect(reverse('cart' ))
+
+def cart_sub(request,pk):
+    obj = CartItems.objects.get(pk=pk)
+    if obj.cart_quantity > 1:
+        obj.cart_quantity -= 1
+        obj.save()
+    
+    
+    return HttpResponseRedirect(reverse('cart' ))   
+
+def cart_remove(request,pk):
+    CartItems.objects.get(pk=pk).delete()
+    
+    return HttpResponseRedirect(reverse('cart' ))   

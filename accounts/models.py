@@ -23,10 +23,10 @@ class Cart(BaseModel):
     is_paid = models.BooleanField(default = False)
 
     def get_cart_total(self):
-        cart_items = self.Cart.all()
-        print(cart_items,'hi')
+        cart_itemss = self.cart_items.all()
+        print('hi')
         price =  []
-        for cart_item in cart_items:
+        for cart_item in cart_itemss:
             price.append(cart_item.product.price)
             if cart_item.color_variant:
                 color_variant_price = cart_item.color_variant_price
@@ -40,10 +40,14 @@ class Cart(BaseModel):
 
 class CartItems(BaseModel):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name = 'cart_items')
+    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null = True, blank = True, related_name='product_cart')
     color_variant = models.ForeignKey(ColorVariant, on_delete=models.SET_NULL, null = True, blank = True)
     size_variant = models.ForeignKey(SizeVariant, on_delete=models.SET_NULL, null = True, blank = True)
-    
+    cart_quantity = models.PositiveIntegerField(default = 1)
+    image = models.ImageField(null=True)
+    def __str__(self) -> str:
+        return self.product.product_name
 
     def get_product_price(self):
         price = [self.product.price]

@@ -8,4 +8,6 @@ admin.site.register(Profile)
 admin.site.register(Cart)
 
 
-admin.site.register(CartItems)
+@admin.register(CartItems)
+class CartItemAdmin(admin.ModelAdmin):
+    list_display=['pk','cart','user','product']
