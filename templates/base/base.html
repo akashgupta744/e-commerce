@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<title>e-commerce</title>
+<title>FashionZone</title>
 
 <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
 
@@ -22,10 +22,33 @@
 <!-- custom style -->
 <link href="/media/css/ui.css" rel="stylesheet" type="text/css"/>
 <link href="/media/css/responsive.css" rel="stylesheet" />
-<link href="/media/css/style.css" rel="stylesheet" />
+<!-- <link href="/media/css/style.css" rel="stylesheet" /> -->
 
 <!-- custom javascript -->
 <script src="/media/js/script.js" type="text/javascript"></script>
+
+<style>
+	.navbar
+	{
+		background-color: #212121;
+		
+	}
+	.footer {
+		background-color:#212121;
+		color: white;
+		padding: 20px;
+		text-align: center;
+	}
+	.footer a {
+		color: #6c757d;
+		text-decoration: none;
+		margin: 0 10px;
+	}
+	.footer a:hover {
+		color: #007bff;
+	}
+
+</style>
 
 <script type="text/javascript">
 /// some script
@@ -42,33 +65,12 @@ $(document).ready(function() {
 <body>
 
 	<header class="section-header">
-
-		<nav class="navbar navbar-dark navbar-expand p-0 bg-dark">
-		<div class="container">
-			<ul class="navbar-nav d-none d-md-flex mr-auto">
-				<li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
-				<li class="nav-item"><a class="nav-link" href="#">Delivery</a></li>
-				<li class="nav-item"><a class="nav-link" href="#">Payment</a></li>
-			</ul>
-			<ul class="navbar-nav">
-				<li class="nav-item"><a href="#" class="nav-link"> Call: +7440901753 </a></li>
-				<li class="nav-item dropdown">
-					 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"> English </a>
-					<ul class="dropdown-menu dropdown-menu-right" style="max-width: 100px;">
-						<li><a class="dropdown-item" href="#">Hindi</a></li>
-					</ul>
-				</li>
-			</ul> <!-- list-inline //  -->
-		  </div> <!-- navbar-collapse .// -->
-		 <!-- container //  -->
-		</nav> <!-- header-top-light.// -->
-		
 		<section class="header-main border-bottom">
 			<div class="container">
 		<div class="row align-items-center">
 			<div class="col-lg-2 col-4">
 				<div class="brand-wrap">
-					<img class="logo" src="https://st4.depositphotos.com/7819052/39998/v/450/depositphotos_399985664-stock-illustration-grunge-black-commerce-word-star.jpg"  >
+					<img class="logo" src="https://pbs.twimg.com/profile_images/939569336464818178/UJTA1MsR_400x400.jpg" height="100px" width="80px"  >
 				</div> <!-- brand-wrap.// -->
 				
 			</div>
@@ -97,11 +99,13 @@ $(document).ready(function() {
 					<div class="widget-header icontext">
 						<a href="#" class="icon icon-sm rounded-circle border"><i class="fa fa-user"></i></a>
 						<div class="text">
-							<span class="text-muted">Welcome!</span>
+							
 							<div> 
 								{% if request.user.is_authenticated %}
+								<span class="text-muted">Welcome!{{request.user.first_name}}</span>
 								<a class="nav-link" href="{% url 'logout' %}">logout</a>
 								{% else %}
+								<span class="text-muted">Welcome!</span>
 								<a href="{% url 'login' %}">Sign in</a> |  
 								<a href="{% url 'register' %}">Register</a>
 								{% endif %}
@@ -112,12 +116,52 @@ $(document).ready(function() {
 			</div> <!-- col.// -->
 		</div> <!-- row.// -->
 			</div> <!-- container.// -->
-		</section> <!-- header-main .// -->
+		 <!-- header-main .// -->
+		</section>
+		<nav class="navbar navbar-dark navbar-expand p-0 ">
+			<div class="container">
+				<ul class="navbar-nav d-none d-md-flex mr-auto">
+					<li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
+					<li class="nav-item"><a class="nav-link" href="#">My Orders</a></li>
+					<li class="nav-item"><a class="nav-link" href="#">Payment</a></li>
+				</ul>
+				<ul class="navbar-nav">
+					<li class="nav-item"><a href="#" class="nav-link"> Call: +91 7440901753 </a></li>
+					<li class="nav-item dropdown">
+						 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"> English </a>
+						<ul class="dropdown-menu dropdown-menu-right" style="max-width: 100px;">
+							<li><a class="dropdown-item" href="#">Hindi</a></li>
+						</ul>
+					</li>
+				</ul> <!-- list-inline //  -->
+			  </div> <!-- navbar-collapse .// -->
+			 <!-- container //  -->
+			</nav> <!-- header-top-light.// -->
+		
 		</header>
-
 		{% block start %}
 
 		{% endblock %}
+
+		{% block js %}
+		{% endblock %}
+		
+		<footer class="footer">
+			<div class = "about">
+			<h1>About Us</h1>
+			<div class="about-content">
+				<p>We are a team of passionate entrepreneurs who are dedicated to providing high-quality products to our customers. Our mission is to create a seamless and enjoyable shopping experience for everyone who visits our website.</p>
+				<p>We believe that our customers deserve the best, which is why we only source products from reputable suppliers and manufacturers. We stand behind every product we sell and offer a 100% satisfaction guarantee. If you're not happy with your purchase, simply contact us and we'll make it right.</p>
+				<p>Our team is always available to answer any questions or concerns you may have. You can reach us by email at <a href="mailto:akgupta7440@gmail.com">info@FashionZone_website.com</a> or by phone at +91 7440901753.</p>
+				<p>Thank you for choosing to shop with us. We appreciate your business and look forward to serving you.</p>
+			</div>
+			<a href="">Home</a>
+			<a href="">About</a>
+			<a href="">Contact</a>
+			<a href="">Privacy Policy</a>
+			<a href="">Terms of Service</a>
+			<p>&copy; 2024 FashionZone Website. All rights reserved by @k@shGupt@.</p>
+		</footer>
         </body>
         </html>
         

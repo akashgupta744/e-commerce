@@ -20,6 +20,7 @@ class Profile(BaseModel):
 
 class Cart(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name = 'carts')
+    coupon = models.ForeignKey(Coupon, on_delete = models.SET_NULL, null= True, blank = True)
     is_paid = models.BooleanField(default = False)
 
     def get_cart_total(self):
@@ -35,6 +36,9 @@ class Cart(BaseModel):
                 size_variant_price = cart_item.size_variant_price
                 price.append(size_variant_price)
         
+        # if sum(price) >= self.coupon.minimum_amount:
+        #     total_price = sum(price) - self.coupon.discount_price
+
         return sum(price)
 
 

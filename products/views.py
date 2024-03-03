@@ -5,7 +5,7 @@ from accounts.models import *
 
 
 def product_details(request , name):
-    c = CartItems.objects.all().count()
+    c = CartItems.objects.filter(user=request.user).count()
     cat = Category.objects.get(category_name=name)
     products = Product.objects.filter(category= cat)
     
@@ -15,7 +15,7 @@ def product_details(request , name):
 
 
 def get_product(request , slug):
-    c = CartItems.objects.all().count()
+    c = CartItems.objects.filter(user=request.user).count()
     try:
         product = Product.objects.get(slug = slug)
         context = {'product' : product}
@@ -37,7 +37,7 @@ def get_product(request , slug):
         return HttpResponse(e)
     
 def search_bar(request):
-    c = CartItems.objects.all().count()
+    c = CartItems.objects.filter(user=request.user).count()
     if request.method == 'POST':
         search = request.POST['search']
         items_list = Product.objects.filter(product_name__icontains = search)

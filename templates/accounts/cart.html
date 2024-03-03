@@ -1,5 +1,5 @@
 {% extends "base/base.html" %}
-
+{% load static %}
 
 {% block start %}
 <section class="section-content padding-y">
@@ -64,7 +64,7 @@
     
     <div class="card-body border-top">
         <a href="#" class="btn btn-primary float-md-right"> Make Purchase <i class="fa fa-chevron-right"></i> </a>
-        <a href="#" class="btn btn-light"> <i class="fa fa-chevron-left"></i> Continue shopping </a>
+        <a href="{% url 'index' %}" class="btn btn-light"> <i class="fa fa-chevron-left"></i> Continue shopping </a>
     </div>	
     </div> <!-- card.// -->
     
@@ -76,36 +76,45 @@
         <aside class="col-md-3">
             <div class="card mb-3">
                 <div class="card-body">
-                <form>
+                <form method="POST">
+                    {% csrf_token %}
+                    {% include "base/alert.html" %}
                     <div class="form-group">
                         <label>Have coupon?</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" name="" placeholder="Coupon code">
+                            <input type="text" class="form-control" id="couponid" name="coupon" placeholder="Coupon code">
                             <span class="input-group-append"> 
-                                <button class="btn btn-primary">Apply</button>
+            
+                                <button type="submit" class="btn btn-primary">Apply</button>
                             </span>
+                            
                         </div>
+                        <br>
+                        
                     </div>
                 </form>
+                {% for coupon in coupons %}
+                        <button class = "btn btn-success m-1" onclick="couponCode(this)" id = "{{coupon.coupon_code}}">{{coupon.coupon_code}}</button>
+                        {% endfor %}
                 </div> <!-- card-body.// -->
             </div>  <!-- card .// -->
             <div class="card">
                 <div class="card-body">
                         <dl class="dlist-align">
                           <dt>Total price:</dt>
-                          <dd class="text-right">₹ {{total_cart_sum}}.00</dd>
+                          <dd class="text-right">₹ {{total_cart}}.00</dd>
                         </dl>
                         <dl class="dlist-align">
                           <dt>Discount:</dt>
-                          <dd class="text-right">₹ 00.00</dd>
+                          <dd class="text-right">₹ {{disc}}.00</dd>
                         </dl>
                         <dl class="dlist-align">
                           <dt>Total:</dt>
                           <dd class="text-right  h5"><strong>₹ {{total_cart_sum}}.00</strong></dd>
                         </dl>
                         <hr>
-                        <p class="text-center mb-3">
-                            <img src="images/misc/payments.png" height="26">
+                        <p class="text-center mb-3">powered by
+                            <img src="https://cdn.cssauthor.com/wp-content/uploads/2023/02/Essential-Minimal-Payment-Icons.jpg?strip=all&lossy=1&resize=1000%2C500&ssl=1" height="110">
                         </p>
                         
                 </div> <!-- card-body.// -->
@@ -115,5 +124,23 @@
     
     </div> <!-- container .//  -->
     </section>
+
+
+    
+
+    {% endblock %}
+
+    {% block js %}
+    <script>
+        var cid = document.getElementById('couponid')
+        function couponCode(e)
+        {   
+            var id = e.getAttribute('id')
+            
+            cid.setAttribute('value',id)
+            
+        }
+        
+    </script>
 
     {% endblock %}

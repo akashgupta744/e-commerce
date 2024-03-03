@@ -7,8 +7,8 @@ from django.contrib.auth.decorators import login_required
 
    
 def index(request):
-    c = CartItems.objects.all().count()
+    # c = CartItems.objects.all().count()
     
-    context = {'products' : Category.objects.all(),'count':c , 'banners': BannerImage.objects.all()}
+    context = {'products' : Category.objects.all(), 'banners': BannerImage.objects.all()}
     
     return render(request , 'home/index.html' , context)

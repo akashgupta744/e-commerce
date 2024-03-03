@@ -10,12 +10,19 @@ from .models import *
 
 admin.site.register(Category)
 
+
+
 class ProductImageAdmin(admin.StackedInline):
     model =ProductImage
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['product_name' , 'price']
     inlines = [ProductImageAdmin]
+
+    
+@admin.register(Coupon)
+class CouponAdmin(admin.ModelAdmin):
+    list_display=['pk', 'coupon_code']
 
 
 @admin.register(ColorVariant)

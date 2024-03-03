@@ -103,16 +103,17 @@ def add_to_cart(request, uid):
 
 @login_required(login_url='login') 
 def cart(request):
+    coupons = Coupon.objects.all()
+    
+
     c = CartItems.objects.filter(user=request.user)
-    print(c)
     img_list=[]
     for cart in c:
         f = True 
-        for im in cart.product.product_image.all():
+        for img in cart.product.product_image.all():
             if f:
-                img_list.append(im)
+                img_list.append(img)
                 f=False
-    print(img_list)
     total=0
     i=0
     for p in c :
@@ -120,8 +121,31 @@ def cart(request):
         p.image=img_list[i].image
         p.save
         i +=1
+    final_total = total
+    disc = 0
+    if request.method == 'POST':
+        coupon = request.POST.get('coupon')
+        if coupon:
+            coupon_obj = Coupon.objects.filter(coupon_code = coupon)[0]
+            
+
+            if coupon_obj and (not coupon_obj.is_expired) and final_total >= coupon_obj.minimum_amount:
+                final_total -= coupon_obj.discount_price
+                disc = coupon_obj.discount_price
+                messages.success(request, 'Wooh ohh! Coupon Applied Successfully ')
+
+            else:
+                if coupon_obj.is_expired:
+                    messages.warning(request, 'Ohh ho! Coupon experied')
+                else:
+                    messages.info(request, 'Coupon is not applicable for this amount')
+
+        else:
+            messages.warning(request, 'please add Coupon')
+            
     
-    context = {'carts': c,'total_cart_sum':total,'count':c.count()}
+    
+    context = {'carts': c,'total_cart':total,'total_cart_sum':final_total,'count':c.count(), 'coupons':coupons, 'disc':disc}
     
     return render(request, 'accounts/cart.html', context)
 
